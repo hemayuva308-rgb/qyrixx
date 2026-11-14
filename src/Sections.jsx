@@ -1,10 +1,11 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {CATS,PKGS,pshort,hash,findIn,U,inr} from './data';
-import {CFG,wa,PRODUCTS_OF_WEEK,DEMO_VIDEOS,DEMO_POSTERS,CAT_IMAGES,GALLERY,FAQ_IMAGES,HERO_VIDEO,HERO_POSTER,weekOfYear,daysToMonday} from './config';
+import {CFG,wa,PRODUCTS_OF_WEEK,DEMO_VIDEOS,DEMO_POSTERS,CAT_IMAGES,PRODUCT_IMAGES,GALLERY,FAQ_IMAGES,HERO_VIDEO,HERO_POSTER,weekOfYear,daysToMonday} from './config';
 import {useI18n} from './i18n';
 import {Reveal,Parallax,WordSlider,useScrollProgress,reduce} from './fx';
 import {DemoPlayer,Coverflow} from './Media';
+import {Art} from './Art';
 import {openChat} from './Chatbot';
 
 const Head=({h,p,id})=><Reveal className="sh"><h2 id={id}>{h}</h2>{p&&<p className="lead">{p}</p>}</Reveal>;
@@ -52,7 +53,8 @@ export function ImageRows(){
   upd();addEventListener('scroll',on,{passive:true});addEventListener('resize',on);
   return()=>{removeEventListener('scroll',on);removeEventListener('resize',on);cancelAnimationFrame(raf)};
  },[]);
- const a=[...GALLERY.slice(0,6),...GALLERY.slice(0,2)],b=[...GALLERY.slice(6),...GALLERY.slice(6,8)].reverse();
+ /* each picture appears once: first half in the top row, second half in the bottom row */
+ const half=Math.ceil(GALLERY.length/2),fill=r=>r.length>=5?r:[...r,...r],a=fill(GALLERY.slice(0,half)),b=fill(GALLERY.slice(half)).reverse();
  return <div className="gal" ref={ref} aria-hidden="true">
   <div className="gal-r a">{a.map((s,i)=><img key={i} className="gal-i" src={s} alt="" loading="lazy"/>)}</div>
   <div className="gal-r b">{b.map((s,i)=><img key={i} className="gal-i" src={s} alt="" loading="lazy"/>)}</div>
@@ -69,7 +71,7 @@ export function ServicesShowcase(){
     <button type="button" role="tab" aria-selected={k===a} className={k===a?'on':''} onClick={()=>setA(k)}>
      <span className="n">{String(k+1).padStart(2,'0')}</span><span className="nm">{catName(k)}</span>{k===a&&!hold&&<i className="fill" key={a}/>}</button></li>)}</ul>
    <div className="sv-panel" key={a} role="tabpanel">
-    <div className="sv-art"><img className="sv-img" src={CAT_IMAGES[a%CAT_IMAGES.length]} alt={catName(a)} loading="lazy"/></div>
+    <div className="sv-art">{CAT_IMAGES[a]?<img className="sv-img" src={CAT_IMAGES[a]} alt={catName(a)} loading="lazy"/>:<Art k={a} tone="brand" label={catName(a)}/>}</div>
     <div className="sv-txt"><h3>{catName(a)}</h3><p>{c.b}</p>
      <ul className="sv-chips">{c.items.map((s,i)=><li key={s.slug} style={{'--i':i}}><Link to={`/services/${c.slug}/${s.slug}`} target="_blank" rel="noopener">{s.n}</Link></li>)}</ul>
      <Link className="pill" to={'/services/'+c.slug}>{t('svc.explore',{n:catName(a)})}</Link></div>
@@ -102,7 +104,7 @@ export function ProductWeek(){
    <div className="row"><button type="button" className="pill" onClick={()=>openChat(s.n)}>{t('potw.ask')}</button>
     <Link className="pill bl" to={`/services/${c.slug}/${s.slug}`} target="_blank" rel="noopener">{t('potw.view')}</Link></div>
   </Reveal>
-  <Reveal dir="right" className="potw-art"><Parallax speed={.07}><img className="potw-img" src={CAT_IMAGES[ci%CAT_IMAGES.length]} alt={s.n} loading="lazy"/></Parallax></Reveal>
+  <Reveal dir="right" className="potw-art"><Parallax speed={.07}>{PRODUCT_IMAGES[s.n]?<img className="potw-img" src={PRODUCT_IMAGES[s.n]} alt={s.n} loading="lazy"/>:<Art k={ci} name={s.n} tone="brand" label={s.n}/>}</Parallax></Reveal>
  </div></div></section>;
 }
 
@@ -207,7 +209,7 @@ export function FAQ({id='faq'}){
    <ul>{qs.map(([q,ans],i)=><li key={q} className={'fq'+(a===i?' open':'')}>
     <button type="button" aria-expanded={a===i} aria-controls={'fa'+i} onClick={()=>jump(i)}><span>{q}</span></button>
     <div className="fq-a" id={'fa'+i} role="region"><div><p>{ans}</p></div></div></li>)}</ul></div>
-  <div className="faqs-img" aria-hidden="true">{qs.map((_,i)=><img key={i} className={a===i?'on':''} src={FAQ_IMAGES[i%FAQ_IMAGES.length]} alt="" loading="lazy"/>)}</div>
+  <div className="faqs-img" aria-hidden="true">{qs.map((_,i)=><div key={i} className={'faqs-pic'+(a===i?' on':'')}>{FAQ_IMAGES[i]?<img src={FAQ_IMAGES[i]} alt="" loading="lazy"/>:<Art faq={i} tone="brand" cover/>}</div>)}</div>
  </div></div></section>;
 }
 

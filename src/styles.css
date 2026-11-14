@@ -539,9 +539,11 @@ footer .logo img{height:28px}
 .fq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.2,.7,.2,1)}
 .fq-a>div{overflow:hidden}.fq-a p{margin:0;padding:0 0 16px;color:var(--mut);max-width:52ch}
 .fq.open .fq-a{grid-template-rows:1fr}
-.faqs-img{position:relative;aspect-ratio:4/3.4;border-radius:28px;overflow:hidden;background:#e6eef7;box-shadow:var(--sh)}
-.faqs-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .6s,transform .9s}
-.faqs-img img.on{opacity:1;transform:none}
+.faqs-img{position:relative;aspect-ratio:4/3.4;border-radius:28px;overflow:hidden;background:#fff;box-shadow:var(--sh)}
+.faqs-pic{position:absolute;inset:0;opacity:0;transform:scale(1.06);transition:opacity .6s,transform .9s}
+.faqs-pic.on{opacity:1;transform:none}
+.faqs-pic img,.faqs-pic .art{display:block;width:100%;height:100%;object-fit:cover}
+.art-cover{overflow:visible}
 
 /* pricing calculator */
 .calc{display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start}
@@ -573,3 +575,26 @@ footer .logo img{height:28px}
  .stk-c{flex-direction:column;align-items:flex-start;gap:10px}
 }
 .about-tx .box{margin-bottom:24px}
+
+/* video list: each row shows the first frame of its own video */
+.dv-th video{display:block;width:100%;height:100%;object-fit:cover}
+
+/* ---------- typography: one consistent scale, weights and spacing (colours and fonts unchanged) ---------- */
+body{-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-kerning:normal}
+h1,h2,h3,h4{font-weight:600;text-wrap:balance}
+h1{letter-spacing:-.025em}h2{letter-spacing:-.02em}h3{letter-spacing:-.012em}
+:lang(ta) h1,:lang(ta) h2,:lang(ta) h3,:lang(hi) h1,:lang(hi) h2,:lang(hi) h3{letter-spacing:0}
+p,li{text-wrap:pretty}
+.sh h2,.potw h2,.faqs-l h2{font-size:clamp(28px,4vw,44px)}
+.lead{line-height:1.55}
+.sv-txt h3{font-size:clamp(22px,2.4vw,28px);line-height:1.2}
+.stk-n,.sv-list .n,.calc-t b,.calc-l .ct{font-variant-numeric:tabular-nums}
+.by,.potw-p small{font-size:14px}
+/* FAQ: sized so the title and all questions fit in the pinned area without touching the header */
+.faqs-l h2{margin-bottom:18px}
+.fq button{font-size:clamp(16px,1.55vw,21px);line-height:1.35;padding:13px 0;letter-spacing:-.01em}
+.fq-a p{font-size:15px;line-height:1.6;padding-bottom:14px}
+:lang(ta) .fq button,:lang(hi) .fq button{letter-spacing:0;line-height:1.5}
+
+:lang(ta) .faqs-l h2,:lang(hi) .faqs-l h2{font-size:clamp(22px,2.5vw,30px);margin-bottom:12px}
+:lang(ta) .fq button,:lang(hi) .fq button{font-size:clamp(15px,1.4vw,19px);padding:11px 0}

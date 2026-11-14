@@ -42,17 +42,23 @@ export const DEMO_VIDEOS=[
  '/assets/videos/video5.mp4#t=0.1',   /* 5 Agency */
  '/assets/videos/intasia.mp4#t=0.1',  /* 6 Portfolio */
  ''];                                 /* 7 School (no video yet, shows picture) */
-/* Pictures shown on a demo card when its video is '' */
-export const DEMO_POSTERS=['bakery','velvetique','caras','finnegan','kiko','luna','mamonde'].map(n=>`/assets/img/${n}.jpg`);
+/* Optional picture for a demo card whose video is '' (same order as above), e.g. '/assets/img/school.jpg'.
+   Left empty, the card shows the built-in animated demo of that kind of site. */
+export const DEMO_POSTERS=[];
 
 /* ===== PICTURES (files are in public/assets/img/) ===== */
-/* One picture per service category (9 categories, same order as src/data.js). Do NOT leave this empty. */
-export const CAT_IMAGES=['1s','2s','3s','4s','5s','6s','7s','8s','9s'].map(n=>`/assets/img/${n}.png`);
+/* Service categories (9, same order as src/data.js). Each category has its own built-in animated illustration
+   in the brand colours, so no two look alike. To use your own picture for a category, put its path in that
+   position, e.g. ['/assets/img/web.jpg','','', ...]. '' = built-in illustration. */
+export const CAT_IMAGES=[];
+/* Product of the week: built-in illustration per product. To use your own picture: {'CRM Solution':'/assets/img/crm.jpg'} */
+export const PRODUCT_IMAGES={};
 
 /* Pictures in the two sliding rows under the hero (need at least 8). Do NOT leave this empty. */
 export const GALLERY=['molina','bakery','car','caras','elite','velvetique','kiko','luna','mamonde','springdale','finnegan','everwood'].map(n=>`/assets/img/${n}.jpg`);
-/* Pictures beside the FAQ (changes as each question opens) */
-export const FAQ_IMAGES=['velvetique','car','img 1','caras','elite','mamonde','kiko','bakery','finnegan'].map(n=>`/assets/img/${n}.jpg`);
+/* Pictures beside the FAQ (one per question, changes as each question opens). Each question has a built-in
+   illustration that matches its topic. To use your own picture for a question, put its path in that position. */
+export const FAQ_IMAGES=[];
 
 /* Reels shown in the dashboard: [service name, caption line]. Prices are read from src/data.js. */
 export const REELS=['Logo Design','Static Website','AI Chatbot Development','SEO Services','Company App','Domain Setup'];

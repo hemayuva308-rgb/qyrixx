@@ -55,12 +55,13 @@ export function Reel({ci=0,v=0,name,price,className=''}){
 /* ---------- poster (SVG, no image files needed) ---------- */
 const wrap=(s,n=14)=>{const out=[];let cur='';for(const w of s.split(' ')){if((cur+' '+w).trim().length>n&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out.slice(0,3)};
 export function Poster({name,price,v=0,ci=0}){
- const [a,b]=PAL[v%PAL.length],lay=v%4,lines=wrap(name),dark=lay===0||lay===2,fg=dark?'#fff':'#000',id='pg'+v+ci;
+ /* the layout shifts by one on every row of four, so two rows never repeat the same pattern */
+ const [a,b]=PAL[v%PAL.length],lay=(v+Math.floor(v/4))%4,lines=wrap(name),dark=lay===0||lay===2,fg=dark?'#fff':'#000',id='pg'+v+ci;
  return <svg className="poster" viewBox="0 0 300 375" role="img" aria-label={name+' '+price}>
   <defs><linearGradient id={id} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a}/><stop offset="1" stopColor={b}/></linearGradient></defs>
   <rect width="300" height="375" fill={lay===0?`url(#${id})`:lay===2?'#000':lay===3?'#fff':'#f5f7ff'}/>
   {lay===0&&<><circle className="p-spin" cx="230" cy="86" r="70" fill="#fff" opacity=".16"/><circle cx="60" cy="330" r="90" fill="#fff" opacity=".12"/></>}
-  {lay===1&&<><circle className="p-bob" cx="226" cy="96" r="62" fill={a} opacity=".85"/><rect className="p-bob2" x="20" y="150" width="90" height="90" rx="28" fill={b} opacity=".75"/></>}
+  {lay===1&&<><circle className="p-bob" cx="226" cy="96" r="62" fill={a} opacity=".85"/><rect className="p-bob2" x="24" y="104" width="86" height="86" rx="26" fill={b} opacity=".75"/></>}
   {lay===2&&<><circle className="p-spin" cx="150" cy="120" r="78" fill="none" stroke={`url(#${id})`} strokeWidth="14" strokeDasharray="60 22"/><circle cx="150" cy="120" r="34" fill={`url(#${id})`}/></>}
   {lay===3&&<><path d="M0 0h300v190H0z" fill={`url(#${id})`} opacity=".9"/><circle className="p-bob" cx="150" cy="190" r="56" fill="#fff"/><circle cx="150" cy="190" r="34" fill={`url(#${id})`}/></>}
   <text x="24" y={lay===3?262:250} fill={fg} fontSize="30" fontWeight="700" style={{fontFamily:'Sora, system-ui, sans-serif'}}>{lines.map((l,i)=><tspan key={i} x="24" dy={i?34:0}>{l}</tspan>)}</text>
