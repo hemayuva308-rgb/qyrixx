@@ -1,8 +1,9 @@
-/* Renders tools/media/studio.html into public/assets/posters/*.jpg and public/assets/reels/*.mp4 (+ .jpg cover).
+/* Renders the dashboard reels (public/assets/reels/*.mp4 + .jpg cover) from tools/media/studio.html.
+   The dashboard posters (public/assets/posters/) now come from the design canvas; 'posters' here makes the old set.
    Needs: the dev server running (npm run dev), Playwright with Chromium, and ffmpeg.
    Usage: node tools/media/render.cjs [posters|reels] [http://localhost:5173] */
 const {chromium}=require('playwright'),{spawn}=require('child_process'),fs=require('fs'),path=require('path');
-const what=process.argv[2]||'all',base=(process.argv[3]||'http://localhost:5173')+'/tools/media/studio.html',pub=path.join(__dirname,'../../public/assets');
+const what=process.argv[2]||'reels',base=(process.argv[3]||'http://localhost:5173')+'/tools/media/studio.html',pub=path.join(__dirname,'../../public/assets');
 const slug=s=>s.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const FPS=30,SECS=6;
 (async()=>{

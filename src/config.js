@@ -66,7 +66,8 @@ export const FAQ_IMAGES=[];
    A service without a file falls back to the built-in animated card. To remake the files: tools/media/render.cjs */
 export const mediaFile=(dir,name,ext)=>`/assets/${dir}/${name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}.${ext}`;
 export const REELS=['Logo Design','Static Website','AI Chatbot Development','SEO Services','Company App','Domain Setup'];
-/* Posters shown in the dashboard: service names */
-export const POSTERS=['Brand Identity Kit','Social Media Poster','Landing Page','Figma UI/UX Design','Email Marketing','WhatsApp Automation','Resume Building','Cloud Server Setup'];
+/* Posters shown in the dashboard: one per service category (names must match src/data.js).
+   Pictures: public/assets/posters/<category-name>.jpg, e.g. website-development.jpg */
+export const POSTERS=['Website Development','UI/UX & Branding','AI & Automation','Business Solutions','Mobile App Development','Digital Marketing','Hosting & Cloud','Support & Maintenance','Career Services'];
 export const weekOfYear=(d=new Date())=>{const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)};
 export const daysToMonday=(d=new Date())=>{const n=d.getDay()||7;return 8-n};
