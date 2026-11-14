@@ -45,7 +45,7 @@ export default function Dashboard(){
  return <div className="dsh">
   <header className="dsh-top">
    <button type="button" className="dsh-burger" aria-label={t('dash.menu')} aria-expanded={side} onClick={()=>setSide(!side)}>☰</button>
-   <Link to="/app" className="dsh-logo" aria-label="">QYRIXX<img src="/assets/logo-light.svg" alt="QYRIXX"/><span>QYRIXX</span></Link>
+   <Link to="/app" className="dsh-logo" aria-label="QYRIXX"><img src="/assets/logo-light.svg" alt=""/><span>QYRIXX</span></Link>
    <form className="dsh-q" role="search" onSubmit={e=>{e.preventDefault();nav('/app/services?q='+encodeURIComponent(q))}}>
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M16 16l5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
     <input value={q} onChange={e=>setQ(e.target.value)} placeholder={t('dash.search')} aria-label={t('dash.search')}/></form>
@@ -78,7 +78,7 @@ function Videos(){
  return <div className="dv">
   <div className="dv-main"><DemoPlayer key={cur} v={cur} src={DEMO_VIDEOS[cur]||undefined} playing={play} onToggle={()=>setPlay(p=>!p)} t={t}/></div>
   <ul className="dv-list">{names.map((n,k)=><li key={n}><button type="button" className={k===cur?'on':''} onClick={()=>{if(k===cur)setPlay(p=>!p);else{setCur(k);setPlay(true)}}}>
-   <span className="dv-th static"><MockSite v={k}/></span>
+   <span className="dv-th static">{DEMO_VIDEOS[k]?<video src={DEMO_VIDEOS[k]} muted playsInline preload="metadata" tabIndex={-1} aria-hidden="true"/>:<MockSite v={k}/>}</span>
    <span className="dv-t"><b>{n}</b><em>{k===cur&&play?'❚❚ '+t('demo.pause'):'▶ '+t('demo.play')}</em></span></button></li>)}</ul></div>;
 }
 

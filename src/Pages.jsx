@@ -23,7 +23,7 @@ export function Pricing(){
 export function AboutPage(){
  const {t}=useI18n(),[ok,setOk]=useState(true);useTitle('About | QYRIXX','About QYRIXX and its founder.');
  return <section className="sec"><div className="w about-g">
-  <Reveal dir="left" className="about-ph">{ok?<img src="public\assets\img\hema.jpeg" alt="Hema Malini, founder of QYRIXX" onError={()=>setOk(false)}/>:<div className="about-mono" aria-hidden="true">HM</div>}</Reveal>
+  <Reveal dir="left" className="about-ph">{ok?<img src="/assets/img/hema.jpeg" alt="Hema Malini, founder of QYRIXX" onError={()=>setOk(false)}/>:<div className="about-mono" aria-hidden="true">HM</div>}</Reveal>
   <Reveal dir="right" className="about-tx"><h1>{t('sec.about')}</h1><p className="lead">{t('about.p')}</p><div className="box"><p>{t('about.m')}</p><p>{t('about.v')}</p></div>
    <Link className="pill" to="/contact">{t('hero.start')}</Link></Reveal></div></section>;
 }
