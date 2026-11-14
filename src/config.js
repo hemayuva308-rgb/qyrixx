@@ -60,7 +60,11 @@ export const GALLERY=['molina','bakery','car','caras','elite','velvetique','kiko
    illustration that matches its topic. To use your own picture for a question, put its path in that position. */
 export const FAQ_IMAGES=[];
 
-/* Reels shown in the dashboard: [service name, caption line]. Prices are read from src/data.js. */
+/* Reels shown in the dashboard (service names). Each one plays its video from public/assets/reels/<service-name>.mp4
+   (cover picture: the .jpg with the same name). Posters use public/assets/posters/<service-name>.jpg.
+   File names are the service name in lower case with dashes, e.g. 'Logo Design' -> logo-design.mp4.
+   A service without a file falls back to the built-in animated card. To remake the files: tools/media/render.cjs */
+export const mediaFile=(dir,name,ext)=>`/assets/${dir}/${name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}.${ext}`;
 export const REELS=['Logo Design','Static Website','AI Chatbot Development','SEO Services','Company App','Domain Setup'];
 /* Posters shown in the dashboard: service names */
 export const POSTERS=['Brand Identity Kit','Social Media Poster','Landing Page','Figma UI/UX Design','Email Marketing','WhatsApp Automation','Resume Building','Cloud Server Setup'];
