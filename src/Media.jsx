@@ -1,6 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Art,PAL} from './Art';
 import {reduce} from './fx';
+import {mediaFile} from './config';
 
 /* ---------- animated "website demo" (stands in for a recorded video) ---------- */
 const TPL=[['Saffron','#e11d48','#fb7185','#fff1f2'],['CareWell','#0ea5e9','#38bdf8','#f0f9ff'],['Atelier','#111111','#8b5cf6','#faf5ff'],['Haven','#116dff','#7dd3fc','#eff6ff'],['Orbit','#8b5cf6','#116dff','#f5f3ff'],['Folio','#0f172a','#a78bfa','#f8fafc'],['Bright','#f59e0b','#38bdf8','#fffbeb']];
@@ -44,6 +45,11 @@ export function DemoPlayer({v=0,src,poster,playing,onToggle,controls=true,classN
 
 /* ---------- vertical reel card ---------- */
 export function Reel({ci=0,v=0,name,price,className=''}){
+ const [ok,setOk]=useState(true),vid=useRef(null);
+ /* play only while the card is on screen */
+ useEffect(()=>{const el=vid.current;if(!el||reduce()||!('IntersectionObserver' in window))return;
+  const io=new IntersectionObserver(([e])=>{e.isIntersecting?el.play().catch(()=>{}):el.pause()},{threshold:.35});io.observe(el);return()=>io.disconnect()},[ok]);
+ if(ok)return <div className={'reel reel-v '+className}><video ref={vid} src={mediaFile('reels',name,'mp4')} poster={mediaFile('reels',name,'jpg')} muted loop playsInline preload="metadata" aria-label={name} onError={()=>setOk(false)}/></div>;
  return <div className={'reel '+className}>
   <div className="reel-top"><span className="live"/>QYRIXX</div>
   <div className="reel-art"><Art k={ci} v={v}/></div>
@@ -54,7 +60,11 @@ export function Reel({ci=0,v=0,name,price,className=''}){
 
 /* ---------- poster (SVG, no image files needed) ---------- */
 const wrap=(s,n=14)=>{const out=[];let cur='';for(const w of s.split(' ')){if((cur+' '+w).trim().length>n&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out.slice(0,3)};
-export function Poster({name,price,v=0,ci=0}){
+export function Poster(props){
+ const [ok,setOk]=useState(true);
+ return ok?<img className="poster" src={mediaFile('posters',props.name,'jpg')} alt={props.name} width="864" height="1080" loading="lazy" onError={()=>setOk(false)}/>:<PosterArt {...props}/>;
+}
+function PosterArt({name,price,v=0,ci=0}){
  /* the layout shifts by one on every row of four, so two rows never repeat the same pattern */
  const [a,b]=PAL[v%PAL.length],lay=(v+Math.floor(v/4))%4,lines=wrap(name),dark=lay===0||lay===2,fg=dark?'#fff':'#000',id='pg'+v+ci;
  return <svg className="poster" viewBox="0 0 300 375" role="img" aria-label={name+' '+price}>

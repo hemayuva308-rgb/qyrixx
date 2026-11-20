@@ -84,7 +84,7 @@ function Videos(){
 
 export function Discover(){
  const {t}=useI18n(),{user}=useAuth(),names=t('tpl'),name=(user.displayName||user.email||'').split(' ')[0].split('@')[0];
- const reels=REELS.map(find).filter(Boolean),posters=POSTERS.map(find).filter(Boolean);
+ const reels=REELS.map(find).filter(Boolean),posters=POSTERS.map(n=>CATS.findIndex(c=>c.n===n)).filter(i=>i>=0);
  return <>
   <section className="banner"><Circles className="in"/><div className="banner-t"><small>{t('dash.hello',{n:name||'👋'})}</small><h1>{t('dash.bannerT')}</h1><p>{t('dash.bannerS')}</p></div>
    <Link className="pill wh" to="/contact">{t('dash.new')}</Link></section>
@@ -95,6 +95,6 @@ export function Discover(){
    <Row title={t('dash.reels')}>
     <Scroller>{reels.map((f,i)=><Link key={f.s.slug} to={svcLink(f)} className="reel-l"><Reel ci={f.ci} v={hash(f.s.slug,6)} name={f.s.n} price={pshort(f.s)}/></Link>)}</Scroller></Row>
    <Row title={t('dash.posters')}>
-    <div className="posters">{posters.map((f,i)=><Reveal key={f.s.slug} dir="zoom" delay={(i%4)*80}><Link to={svcLink(f)} className="poster-l"><Poster name={f.s.n} price={pshort(f.s)} v={i} ci={f.ci}/></Link></Reveal>)}</div></Row>
+    <div className="posters">{posters.map((ci,i)=><Reveal key={CATS[ci].slug} dir="zoom" delay={(i%3)*80}><Link to={'/app/services/'+CATS[ci].slug} className="poster-l"><Poster name={CATS[ci].n} v={i} ci={ci}/></Link></Reveal>)}</div></Row>
   </div></>;
 }
