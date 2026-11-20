@@ -10,8 +10,8 @@ import nodemailer from 'nodemailer';
 const TYPES=['enquiry','booking','domain','support','site','chat'];
 const FIELDS={name:120,email:160,phone:20,company:120,category:80,service:120,budget:60,timeline:60,message:4000,domain:120,siteId:80,siteName:120,template:60,date:20,page:200,uid:128};
 const NOTIFY_TO=()=>process.env.LEAD_NOTIFY_TO||'qyrixx2026@gmail.com';
-const hits=new Map();/* best-effort limit: 8 requests per IP per 10 minutes (per server instance) */
-const limited=ip=>{const now=Date.now(),a=(hits.get(ip)||[]).filter(t=>now-t<6e5);a.push(now);hits.set(ip,a);return a.length>8};
+const hits=new Map();/* best-effort limit: 20 requests per IP per 10 minutes (per server instance) */
+const limited=ip=>{const now=Date.now(),a=(hits.get(ip)||[]).filter(t=>now-t<6e5);a.push(now);hits.set(ip,a);return a.length>20};
 
 export function clean(body){
  if(!body||typeof body!=='object')return {error:'Invalid request.'};

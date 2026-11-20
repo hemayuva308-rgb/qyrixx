@@ -30,6 +30,7 @@ function Side({close}){
     {c.items.map(s=><li key={s.slug}><NavLink to={`/app/services/${c.slug}/${s.slug}`} onClick={close}>{s.n}<small>{pshort(s)}</small></NavLink></li>)}
    </ul></div></div>)}
   <div className="sd-sep"/>
+  <NavLink to="/app/sites" className="sd-i" onClick={close}>My websites</NavLink>
   <NavLink to="/app/projects" className="sd-i" onClick={close}>{t('dash.projects')}</NavLink>
   <NavLink to="/app/products" className="sd-i" onClick={close}>{t('dash.products')}</NavLink>
   {isAdmin(user)&&<NavLink to="/app/crm" className="sd-i" onClick={close}>CRM</NavLink>}
@@ -91,8 +92,8 @@ export function Discover(){
   <section className="banner"><Circles className="in"/><div className="banner-t"><small>{t('dash.hello',{n:name||'👋'})}</small><h1>{t('dash.bannerT')}</h1><p>{t('dash.bannerS')}</p></div>
    <Link className="pill wh" to="/contact">{t('dash.new')}</Link></section>
   <div className="dsh-in">
-   <Row title={t('dash.templates')} right={<Link className="dr-l" to="/app/services/website-development">{t('dash.viewAll')}</Link>}>
-    <Scroller>{names.map((n,k)=><Link key={n} className="tpl" to="/app/services/website-development/business-website"><span className="tpl-th static"><MockSite v={k}/></span><b>{n}</b></Link>)}</Scroller></Row>
+   <Row title={t('dash.templates')} right={<Link className="dr-l" to="/app/sites">My websites</Link>}>
+    <Scroller>{names.map((n,k)=><Link key={n} className="tpl" to={'/studio/new/'+k} title={'Edit the '+n+' template in the studio'}><span className="tpl-th static"><MockSite v={k}/></span><b>{n}</b></Link>)}</Scroller></Row>
    <Row title={t('dash.videos')} right={<span className="dr-l">{names.length}</span>}><Reveal dir="zoom"><Videos/></Reveal></Row>
    <Row title={t('dash.reels')}>
     <Scroller>{reels.map((f,i)=><Link key={f.s.slug} to={svcLink(f)} className="reel-l"><Reel ci={f.ci} v={hash(f.s.slug,6)} name={f.s.n} price={pshort(f.s)}/></Link>)}</Scroller></Row>
