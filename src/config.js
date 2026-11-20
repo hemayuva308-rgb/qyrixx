@@ -55,9 +55,9 @@ export const PRODUCT_IMAGES={};
 
 /* Pictures in the two sliding rows under the hero (need at least 8). Do NOT leave this empty. */
 export const GALLERY=['molina','bakery','car','caras','elite','velvetique','kiko','luna','mamonde','springdale','finnegan','everwood'].map(n=>`/assets/img/${n}.jpg`);
-/* Pictures beside the FAQ (one per question, changes as each question opens). Each question has a built-in
-   illustration that matches its topic. To use your own picture for a question, put its path in that position. */
-export const FAQ_IMAGES=[];
+/* Posters beside the FAQ (one per question, same order as the questions; files in public/assets/faq/).
+   Set a position to '' to show the built-in animated illustration for that question instead. */
+export const FAQ_IMAGES=['what-qyrixx-does','how-to-start','what-sets-the-price','what-we-build','project-cost','hosting-setup','your-domain','search-and-seo'].map(n=>`/assets/faq/${n}.jpg`);
 
 /* Reels shown in the dashboard (service names). Each one plays its video from public/assets/reels/<service-name>.mp4
    (cover picture: the .jpg with the same name). Posters use public/assets/posters/<service-name>.jpg.
