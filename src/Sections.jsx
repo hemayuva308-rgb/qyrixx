@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {CATS,PKGS,pshort,hash,findIn,U,inr} from './data';
-import {CFG,wa,PRODUCTS_OF_WEEK,DEMO_VIDEOS,DEMO_POSTERS,CAT_IMAGES,PRODUCT_IMAGES,GALLERY,FAQ_IMAGES,HERO_VIDEO,HERO_POSTER,weekOfYear,daysToMonday} from './config';
+import {CFG,PRODUCTS_OF_WEEK,DEMO_VIDEOS,DEMO_POSTERS,CAT_IMAGES,PRODUCT_IMAGES,GALLERY,FAQ_IMAGES,HERO_VIDEO,HERO_POSTER,weekOfYear,daysToMonday} from './config';
 import {useI18n} from './i18n';
 import {Reveal,Parallax,WordSlider,useScrollProgress,reduce} from './fx';
 import {DemoPlayer,Coverflow} from './Media';
@@ -110,7 +110,7 @@ export function ProductWeek(){
 
 /* ---------------- Domain finder (uses Google's public DNS API from the browser) ---------------- */
 const TLDS=['com','in','co.in','net','store','tech'];
-async function lookup(d){
+export async function lookup(d){
  try{const r=await fetch('https://dns.google/resolve?name='+encodeURIComponent(d)+'&type=NS',{headers:{accept:'application/dns-json'}});const j=await r.json();return j.Status===3?'free':j.Status===0?'taken':'unknown'}
  catch{return 'unknown'}
 }
@@ -133,7 +133,7 @@ export function Domain(){
     {res&&<ul className="dom-r">{res.map((r,i)=><li key={r.d} className={r.s} style={{'--i':i}}>
      <span className="ic" aria-hidden="true">{r.s==='free'?'✓':r.s==='taken'?'×':r.s==='wait'?'':'?'}</span><b>{r.d}</b>
      <small>{r.s==='free'?t('dom.free'):r.s==='taken'?t('dom.taken'):r.s==='wait'?t('dom.checking'):t('dom.unknown')}</small></li>)}</ul>}
-    {free&&!busy&&<a className="pill bl" href={wa(`Hi QYRIXX, I would like domain setup for ${free.d}.`)} target="_blank" rel="noopener">{t('dom.cta',{d:free.d})}</a>}
+    {free&&!busy&&<Link className="pill bl" to="/contact" state={{type:'domain',domain:free.d,cat:6,svc:'Domain Setup',msg:`I would like domain setup for ${free.d}.`}}>{t('dom.cta',{d:free.d})}</Link>}
     <p className="note">{t('dom.note')}</p></Reveal></div>
   <Reveal dir="zoom" className="dom-art" aria-hidden="true">
    <svg viewBox="0 0 300 300" className="globe"><defs><linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#38bdf8"/><stop offset="1" stopColor="#8b5cf6"/></linearGradient></defs>

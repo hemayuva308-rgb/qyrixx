@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link,useNavigate,useParams,useLocation,useSearchParams} from 'react-router-dom';
-import {CATS,PKGS,price,isCustom,pshort,hash} from './data';import {CFG,IMG,wa} from './config';import {useAuth,OK,preview} from './auth';
+import {CATS,PKGS,price,isCustom,pshort,hash} from './data';import {CFG,IMG} from './config';import {sendLead} from './backend';import {useAuth,OK,preview} from './auth';
 import {useI18n} from './i18n';import {Reveal,Parallax,Marquee,Circles,PageProgress} from './fx';import {Art} from './Art';import {DemoPlayer} from './Media';
 import {Hero,ImageRows,ServicesShowcase,Demos,ProductWeek,Domain,Process,TeamWords,Packages,PackageCards,Calculator,FAQ,Cta} from './Sections';
 export const useTitle=(t,d)=>useEffect(()=>{document.title=t;if(d)document.querySelector('meta[name=description]')?.setAttribute('content',d)},[t,d]);
@@ -49,14 +49,17 @@ export function Category({embedded}){
 }
 
 export function Service({embedded}){
- const {cat,svc}=useParams(),nav=useNavigate(),loc=useLocation(),{user}=useAuth(),{t,catName,getList}=useI18n(),dlg=useRef(),[dt,setDt]=useState(''),[nt,setNt]=useState('');
+ const {cat,svc}=useParams(),nav=useNavigate(),loc=useLocation(),{user}=useAuth(),{t,catName,getList}=useI18n(),dlg=useRef(),[dt,setDt]=useState(''),[nt,setNt]=useState(''),[bm,setBm]=useState(''),[bs,setBs]=useState({});
  const ci=CATS.findIndex(c=>c.slug===cat),c=CATS[ci],s=c&&c.items.find(x=>x.slug===svc);
  useTitle(s?`${s.n} | ${c.n} | QYRIXX`:'Not found',s&&`${s.n} from QYRIXX. ${c.b}`);
  if(!s)return <NotFound/>;
  const cu=isCustom(ci,s.n),v=hash(s.slug,6),base=embedded?'/app':'';
  const book=()=>user?dlg.current.showModal():nav('/login',{state:{from:loc.pathname}});
- const send=e=>{e.preventDefault();const m=['Booking request (QYRIXX website)',`Service: ${s.n} (${c.n})`,`Name: ${user.displayName||'-'}`,`Contact: ${user.phoneNumber||user.email||'-'}`,`Preferred date: ${dt||'-'}`,`Notes: ${nt.trim()||'-'}`].join('\n');
-  window.open(wa(m),'_blank','noopener');dlg.current.close()};
+ const send=async e=>{e.preventDefault();const em=(user.email||bm).trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return setBs({er:'Enter a valid email address so we can confirm your booking.'});
+  setBs({busy:true});
+  const r=await sendLead({type:'booking',name:user.displayName||em,email:em,phone:user.phoneNumber||'',category:c.n,service:s.n,date:dt,message:nt.trim(),uid:user.uid||''});
+  setBs(r.ok?{done:true}:{er:r.error})};
  return <article className="svp">
   <PageProgress/>
   <header className="svp-hero"><Circles/><div className="w hero-in">
@@ -81,8 +84,10 @@ export function Service({embedded}){
   <dialog ref={dlg}><form id="bf" onSubmit={send}><h2 style={{fontSize:26}}>{t('svcpage.book')}: {s.n}</h2>
    <label htmlFor="dt">Preferred date (optional)</label><input id="dt" type="date" value={dt} onChange={e=>setDt(e.target.value)}/>
    <label htmlFor="nt">Notes</label><textarea id="nt" rows="3" value={nt} onChange={e=>setNt(e.target.value)}/>
-   <p style={{color:'var(--mut)',fontSize:14}}>This opens WhatsApp with your booking details. Press Send there to complete your booking request.</p>
-   <div className="row"><button className="pill" type="submit">Continue to WhatsApp</button><button className="pill ol" type="button" onClick={()=>dlg.current.close()}>Cancel</button></div></form></dialog></article>;
+   {!user?.email&&<><label htmlFor="bm">Email address *</label><input id="bm" type="email" autoComplete="email" value={bm} onChange={e=>setBm(e.target.value)}/></>}
+   {bs.done?<p className="ok" role="status">Booking request sent. We will confirm the date by email.</p>:<p style={{color:'var(--mut)',fontSize:14}}>We confirm every booking by email.</p>}
+   <p className="er" role="alert">{bs.er}</p>
+   <div className="row">{!bs.done&&<button className="pill" type="submit" disabled={bs.busy}>{bs.busy?'Sending…':'Send booking request'}</button>}<button className="pill ol" type="button" onClick={()=>{dlg.current.close();setBs({})}}>{bs.done?'Close':'Cancel'}</button></div></form></dialog></article>;
 }
 
 export function Login(){
@@ -104,33 +109,38 @@ export function Login(){
 
 const BUD=['Not sure yet','Under ₹10,000','₹10,000–₹25,000','₹25,000–₹50,000','₹50,000–₹1,00,000','Above ₹1,00,000'],TL=['Flexible','Within 2 weeks','1 month','2–3 months','3+ months'];
 export function Contact(){
- useTitle('Start a project | QYRIXX');const {state}=useLocation();
- const [v,setV]=useState({name:'',email:'',phone:'',co:'',cat:state?.cat??'',svc:state?.svc??'',bud:BUD[0],tl:TL[0],msg:'',cm:'WhatsApp',pp:false}),[er,setEr]=useState({}),[out,setOut]=useState(''),[cp,setCp]=useState('');
+ useTitle('Start a project | QYRIXX');const {state}=useLocation(),{user}=useAuth();
+ const type=state?.type||'enquiry';
+ const [v,setV]=useState({name:user?.displayName||'',email:user?.email||'',phone:'',co:'',cat:state?.cat??(type==='support'?7:''),svc:state?.svc??'',bud:BUD[0],tl:TL[0],msg:state?.msg||'',cm:'Email',pp:false,website:''}),[er,setEr]=useState({}),[st,setSt]=useState({});
  const set=k=>e=>setV(o=>({...o,[k]:e.target.type==='checkbox'?e.target.checked:e.target.value,...(k==='cat'?{svc:''}:{})}));
  const svcs=v.cat==='pkg'?PKGS.map(p=>p[0]):v.cat===''?[]:CATS[+v.cat].items.map(s=>s.n);
- const submit=e=>{e.preventDefault();const E={},t=k=>String(v[k]).trim(),dg=t('phone').replace(/\D/g,'');
+ const submit=async e=>{e.preventDefault();const E={},t=k=>String(v[k]).trim(),dg=t('phone').replace(/\D/g,'');
   if(!t('name'))E.name='Enter your name.';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t('email')))E.email='Enter a valid email address.';
-  if(!/^[+\d][\d\s-]*$/.test(t('phone'))||dg.length<10||dg.length>13)E.phone='Enter a valid phone number (10 digits).';
+  if(t('phone')&&(!/^[+\d][\d\s-]*$/.test(t('phone'))||dg.length<10||dg.length>13))E.phone='Enter a valid phone number (10 digits) or leave it empty.';
   if(v.cat==='')E.cat='Choose a service category.';if(!t('msg'))E.msg='Describe your project.';if(!v.pp)E.pp='Please confirm you have read the Privacy Policy.';
   setEr(E);if(Object.keys(E).length)return;
-  const m=['New project enquiry (QYRIXX website)','Name: '+t('name'),'Email: '+t('email'),'Phone: '+t('phone'),'Company: '+(t('co')||'-'),'Category: '+(v.cat==='pkg'?'Package':CATS[+v.cat].n),'Service: '+(v.svc||'-'),'Budget: '+v.bud,'Timeline: '+v.tl,'Preferred contact: '+v.cm,'','Requirements:',t('msg')].join('\n');
-  setOut(m);window.open(wa(m),'_blank','noopener')};
+  setSt({busy:true});
+  const r=await sendLead({type,name:t('name'),email:t('email'),phone:t('phone'),company:t('co'),category:v.cat==='pkg'?'Package':CATS[+v.cat].n,service:v.svc,budget:v.bud,timeline:v.tl,message:t('msg')+(v.cm!=='Email'?`\n\nPreferred contact: ${v.cm}`:''),domain:state?.domain||'',uid:user?.uid||'',website:v.website});
+  setSt(r.ok?{done:true}:{er:r.error});if(r.ok)scrollTo({top:0,behavior:'smooth'})};
  const F=({k,l,full,children})=><div className={'f'+(full?' full':'')}><label htmlFor={k}>{l}</label>{children}<span className="er">{er[k]}</span></div>;
- return <div className="w ph1"><h1>Start a project</h1><p className="lead">Phone / WhatsApp: <a href={'tel:+91'+CFG.phone}>{CFG.phone}</a> · Email: <a href={'mailto:'+CFG.email}>{CFG.email}</a> · {CFG.city}</p>
+ const title=type==='support'?'Get help':type==='domain'?'Set up your domain':'Start a project';
+ if(st.done)return <div className="w ph1"><h1>Thank you</h1><div className="box sent" role="status"><p className="lead" style={{margin:0}}>We have received your request and will reply to <b>{v.email}</b> with the next steps, usually within one working day.</p></div>
+  <div className="row" style={{marginTop:24}}><Link className="pill" to="/">Back to home</Link><button className="pill ol" type="button" onClick={()=>{setSt({});setV(o=>({...o,msg:''}))}}>Send another request</button></div></div>;
+ return <div className="w ph1"><h1>{title}</h1><p className="lead">Tell us what you need and we reply by email with a written proposal. Email: <a href={'mailto:'+CFG.email}>{CFG.email}</a> · {CFG.city}</p>
   <form className="fm" onSubmit={submit} noValidate>
    <F k="name" l="Full name *"><input id="name" value={v.name} onChange={set('name')} autoComplete="name"/></F>
    <F k="email" l="Email address *"><input id="email" type="email" value={v.email} onChange={set('email')} autoComplete="email"/></F>
-   <F k="phone" l="Phone number *"><input id="phone" type="tel" value={v.phone} onChange={set('phone')} autoComplete="tel"/></F>
+   <F k="phone" l="Phone number (optional)"><input id="phone" type="tel" value={v.phone} onChange={set('phone')} autoComplete="tel"/></F>
    <F k="co" l="Company / organisation"><input id="co" value={v.co} onChange={set('co')}/></F>
    <F k="cat" l="Service category *"><select id="cat" value={v.cat} onChange={set('cat')}><option value="">Select a category</option>{CATS.map((c,i)=><option key={c.slug} value={i}>{c.n}</option>)}<option value="pkg">Package</option></select></F>
    <F k="svc" l="Specific service"><select id="svc" value={v.svc} onChange={set('svc')}><option value="">Not sure / general enquiry</option>{svcs.map(n=><option key={n}>{n}</option>)}</select></F>
    <F k="bud" l="Estimated budget"><select id="bud" value={v.bud} onChange={set('bud')}>{BUD.map(b=><option key={b}>{b}</option>)}</select></F>
    <F k="tl" l="Preferred timeline"><select id="tl" value={v.tl} onChange={set('tl')}>{TL.map(b=><option key={b}>{b}</option>)}</select></F>
    <F k="msg" l="Project description / requirements *" full><textarea id="msg" rows="4" value={v.msg} onChange={set('msg')}/></F>
-   <F k="cm" l="Preferred contact method"><select id="cm" value={v.cm} onChange={set('cm')}><option>WhatsApp</option><option>Phone call</option><option>Email</option></select></F>
+   <F k="cm" l="Preferred contact method"><select id="cm" value={v.cm} onChange={set('cm')}><option>Email</option><option>Phone call</option></select></F>
+   <div className="hp" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" tabIndex={-1} autoComplete="off" value={v.website} onChange={set('website')}/></div>
    <F k="pp" l="" full><label style={{fontWeight:400}}><input id="pp" type="checkbox" style={{width:'auto',minHeight:0}} checked={v.pp} onChange={set('pp')}/> I have read the <Link to="/privacy">Privacy Policy</Link> *</label></F>
-   <div className="full"><p className="lead" style={{fontSize:14,margin:'0 0 12px'}}>Your enquiry will open in WhatsApp. Please review the details and press Send to complete your enquiry.</p><button className="pill" type="submit">Continue to WhatsApp</button></div></form>
-  {out&&<div style={{marginTop:20,maxWidth:820}}><p className="lead" style={{fontSize:14}}>If WhatsApp did not open, copy this message and send it to +91 {CFG.phone}.</p><textarea className="sr" style={{maxWidth:'none',minHeight:140}} readOnly value={out}/><button className="pill ol" style={{padding:'8px 18px'}} onClick={async()=>{try{await navigator.clipboard.writeText(out);setCp('Copied.')}catch{setCp('Select the text and copy it.')}}}>Copy message</button> <span role="status">{cp}</span></div>}</div>;
+   <div className="full"><p className="er" role="alert">{st.er}</p><button className="pill" type="submit" disabled={st.busy}>{st.busy?'Sending…':'Send request'}</button></div></form></div>;
 }
 
 export const Gallery=({title,items,ph,empty})=>{useTitle(title+' | QYRIXX');return <><div className="w ph1"><h1>{title}</h1></div>

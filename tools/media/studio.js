@@ -140,10 +140,16 @@ const S=[
   <i class="gw" style="--d:3.8s;display:block;height:5px;background:#d0324f;animation-duration:.5s"></i>
   <div class="fd" style="--d:4.2s;display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:30px;align-items:center"><div>${bar(230,'k','height:26px;border-radius:13px')}${bar(170,'k','height:26px;border-radius:13px;margin-top:12px')}${bar(240,'','margin-top:22px')}${bar(190,'','margin-top:10px')}<span class="pill m" style="width:140px;height:46px;margin-top:22px"></span></div><div class="grad" style="height:260px;border-radius:22px"></div></div></div>`];
 const REELS=[['Logo Design','UI/UX & Branding','B'],['Static Website','Website Development','C'],['AI Chatbot Development','AI & Automation','A'],['SEO Services','Digital Marketing','D'],['Company App','Mobile App Development','B'],['Domain Setup','Hosting & Cloud','C']];
+/* floating glossy 3D objects behind each reel */
+const DECOR=t=>{const warm=t==='A'||t==='D',b1=warm?['#e6f4ff','#9fd0f5','#2f6a99']:['#e2506b','#8a0d26','#2a0008'],b2=warm?['#ffffff','#f1d9de','#b3707e']:['#e6f4ff','#9fd0f5','#2f6a99'];
+ return `<i class="b3 fl" style="--c1:${b1[0]};--c2:${b1[1]};--c3:${b1[2]};right:44px;top:40px;width:96px;height:96px"></i>
+ <i class="r3 fl2" style="--c1:#ffffff;--c2:#c3e3fc;--c3:#3f7fb0;right:-40px;top:300px;width:170px;height:170px"></i>
+ <i class="b3 fl2" style="--c1:${b2[0]};--c2:${b2[1]};--c3:${b2[2]};left:22px;bottom:150px;width:58px;height:58px"></i>`};
 const reel=i=>{const [n,cat,t]=REELS[i],w=n.split(' '),lines=w.length>2?[w.slice(0,-1).join(' '),w[w.length-1]]:w;
  return `<div class="re ${t}"><div class="rtop"><img src="${logo(t)}">QYRIXX</div>
-  <h1>${lines.map((x,k)=>`<span class="up" style="--d:${.15+k*.14}s">${x}</span>`).join('')}</h1>
-  <div class="stage">${S[i]()}</div>
+  ${DECOR(t)}
+  <h1>${lines.map((x,k)=>`<span class="up t3${k===lines.length-1?' acc':''}" style="--d:${.15+k*.14}s">${x}</span>`).join('')}</h1>
+  <div class="stage"><div class="stage-in">${S[i]()}</div></div>
   <div class="end up" style="--d:4.7s"><span>${TAG}</span><small>${cat.split(' ')[0]}</small></div>
   <div class="prog"><i></i></div><i class="veil"></i></div>`};
 

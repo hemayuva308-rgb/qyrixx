@@ -15,6 +15,32 @@ Deploy `dist/` to Netlify/Vercel (`public/_redirects` and `vercel.json` handle p
 4. Real SMS OTP needs the Blaze plan; use Firebase test phone numbers for free testing.
 Projects/Products are hidden behind login in the browser only. Do not put private data there; real protection needs a backend.
 
+## Backend, CRM and email alerts (set up once)
+Every enquiry, booking, domain request, support request and website-publish request is sent to `POST /api/lead`
+(`api/lead.js` on Vercel, code in `server/lead.js`). It saves the request in **Firestore** and **emails the team**.
+
+1. Firebase console > **Firestore Database** > Create database (production mode).
+2. Firestore > **Rules**: paste `firestore.rules` from this repo and Publish. The admin email in that file
+   (`qyrixx2026@gmail.com`) is the only account that can read the CRM.
+3. Gmail account `qyrixx2026@gmail.com`: turn on 2-Step Verification, then Google Account > Security >
+   **App passwords** > create one (16 characters).
+4. Vercel > Project > Settings > **Environment Variables** (Production and Preview):
+   - `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_APP_ID`
+   - `VITE_ADMIN_EMAILS=qyrixx2026@gmail.com`
+   - `GMAIL_USER=qyrixx2026@gmail.com`, `GMAIL_APP_PASSWORD=<the app password>`, `LEAD_NOTIFY_TO=qyrixx2026@gmail.com`
+   Then redeploy.
+5. Log in to the dashboard with Google as `qyrixx2026@gmail.com`: the sidebar shows **CRM** (`/app/crm`).
+
+Without these settings the site still works: requests are kept in the visitor's browser (demo mode) and nothing is emailed.
+`npm run dev` runs the same API locally and reads the same variables from `.env`.
+
+## Website studio
+Dashboard > **My websites** (`/app/sites`) or any template card opens the studio (`/studio/:id`): edit text on the page,
+replace pictures, change colours / fonts / corner roundness, add, move, hide or delete sections, preview on desktop,
+tablet and phone, undo / redo. Sites autosave to Firestore (`sites` collection, one owner per site). **Publish** lets the
+customer pick a new domain (availability hint) or enter one they own; the request lands in the CRM and the team inbox.
+Templates live in `src/studio/templates.js`.
+
 ## What is new in this version
 - **Theme**: white page with a soft sky-blue / purple glow on the sides. Buttons are black or blue only. Hero content is centred.
 - **Animations from the Wix reference**: rotating blurred circles, shimmering "Ask QYRIXX about ..." text, word slider, marquee, coverflow gallery, FAQ accordion, filling process line, counters, scroll reveal. All in `src/fx.jsx` and `src/styles.css`.
@@ -36,7 +62,7 @@ Projects/Products are hidden behind login in the browser only. Do not put privat
 - Fonts (Sora, Noto Sans Tamil, Noto Sans Devanagari) load from Google Fonts. Login, Contact and legal pages are English only.
 
 ## Edit
-- `src/config.js`: phone, WhatsApp, email, social links, PROJECTS, PRODUCTS, PRODUCTS_OF_WEEK, DEMO_VIDEOS, REELS, POSTERS.
+- `src/config.js`: email, social links, admin emails, PROJECTS, PRODUCTS, PRODUCTS_OF_WEEK, DEMO_VIDEOS, REELS, POSTERS. The phone number is not shown anywhere on the site.
 - `src/i18n.jsx`: all website texts in English / Tamil / Hindi (hero lines are here now, not in config).
 - `src/data.js`: services, prices, packages.
 - `public/assets/awing.svg` and `logo-light.svg`: logo (dark and light versions). `project.svg` / `product.svg`: placeholders for the Projects and Products pages.
@@ -45,6 +71,6 @@ Projects/Products are hidden behind login in the browser only. Do not put privat
 ## Where to change pictures and videos (src/config.js)
 - Hero video (big frame on the homepage): copy an .mp4 to `public/assets/videos/` and set `HERO_VIDEO='/assets/videos/hero.mp4'`. Empty = picture (`HERO_POSTER`).
 - 7 demo videos: set `DEMO_VIDEOS` (order: Restaurant, Clinic, Clothing store, Real estate, Agency, Portfolio, School). `DEMO_POSTERS` are the pictures shown until a video is added.
-- Pictures: `CAT_IMAGES` (services), `GALLERY` (sliding rows), `FAQ_IMAGES`. Files are in `public/assets/img/`.
+- Pictures: `CAT_IMAGES` (homepage services, `public/assets/services/`), `FAQ_IMAGES` (`public/assets/faq/`), `GALLERY` (sliding rows, `public/assets/img/`). Dashboard posters: `public/assets/posters/`; reels: `public/assets/reels/` (rendered with `node tools/media/render.cjs reels`).
 - Logo: `public/assets/logo.svg`. Founder photo for the About page: `public/assets/about.jpg`.
 - Prices are hidden everywhere except the Pricing page (`/pricing`): packages + calculator (prices come from `src/data.js`).

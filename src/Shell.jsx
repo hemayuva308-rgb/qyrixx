@@ -61,7 +61,7 @@ function Footer(){
  return <footer><div className="w"><div className="fg">
   <div><div className="logo"><img src={IMG.logo} alt=""/><span>QYRIXX</span></div><p style={{color:'var(--mut)'}}>{CFG.tagline}. {t('foot.tag')} {CFG.city}.</p></div>
   <div><h6>{t('nav.services')}</h6>{CATS.map((c,k)=><Link key={c.slug} to={'/services/'+c.slug}>{catName(k)}</Link>)}</div>
-  <div><h6>{t('nav.contact')}</h6><a href={'tel:+91'+CFG.phone}>{CFG.phone}</a><a href={'https://wa.me/'+CFG.wa} target="_blank" rel="noopener noreferrer">WhatsApp</a><a href={'mailto:'+CFG.email}>{CFG.email}</a>
+  <div><h6>{t('nav.contact')}</h6><Link to="/contact">{t('hero.start')}</Link><a href={'mailto:'+CFG.email}>{CFG.email}</a>
    {Object.entries(CFG.social).filter(([,u])=>u).map(([k,u])=><a key={k} href={u} target="_blank" rel="noopener noreferrer">{k}</a>)}
    <Link to="/privacy">{t('foot.priv')}</Link><Link to="/terms">{t('foot.terms')}</Link></div></div>
   <p className="cp">© {new Date().getFullYear()} QYRIXX. {t('foot.rights')}</p></div></footer>;

@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
 import {CATS,pshort} from './data';
-import {CFG,wa} from './config';
+import {CFG} from './config';
 import {useI18n} from './i18n';
 
 /* Open the chat from anywhere: openChat('What does a website cost?') */
@@ -36,8 +36,8 @@ function answer(q,t,catName){
  const m=matchService(q);
  if(m)return {text:t('ans.svc',{n:m.s.n,c:catName(m.ci),p:pshort(m.s)}),link:{to:`/services/${m.c.slug}/${m.s.slug}`,label:t('ans.open')}};
  const s=q.toLowerCase();
- for(const [k,re] of INT)if(re.test(s))return {text:t(k),wa:k==='ans.contact'||k==='ans.start'};
- return {text:t('ans.fb'),wa:true};
+ for(const [k,re] of INT)if(re.test(s))return {text:t(k),wa:k==='ans.contact'||k==='ans.start',q};
+ return {text:t('ans.fb'),wa:true,q};
 }
 
 export default function Chatbot(){
@@ -65,13 +65,13 @@ export default function Chatbot(){
     {msgs.map((m,i)=><div key={i} className={'cb-m '+m.r}>
      <p>{m.text}</p>
      {m.link&&<Link className="cb-a" to={m.link.to} target="_blank" rel="noopener">{m.link.label} ↗</Link>}
-     {m.wa&&<a className="cb-a wa" href={wa('Hi QYRIXX, I have a question.')} target="_blank" rel="noopener">{t('chat.wa')}</a>}
+     {m.wa&&<Link className="cb-a wa" to="/contact" state={{type:'support',msg:m.q||''}}>{t('chat.wa')} →</Link>}
      {m.chips&&<div className="cb-chips">{t('chat.chips').map(c=><button type="button" key={c} onClick={()=>say(c)}>{c}</button>)}</div>}
     </div>)}
     {typing&&<div className="cb-m bot"><p className="dots"><i/><i/><i/></p></div>}
     <div ref={end}/>
    </div>
    <form onSubmit={submit}><input ref={inp} value={val} onChange={e=>setVal(e.target.value)} placeholder={t('chat.ph')} aria-label={t('chat.ph')}/><button type="submit" aria-label={t('chat.send')}><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 11l18-8-8 18-2-8z" fill="currentColor"/></svg></button></form>
-   <small className="cb-ft">{CFG.phone&&'+91 '+CFG.phone}</small>
+   <small className="cb-ft">{CFG.email}</small>
   </section></>;
 }

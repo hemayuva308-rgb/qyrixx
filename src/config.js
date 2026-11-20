@@ -1,8 +1,9 @@
 /* ===== Edit here ===== */
 export const CFG={brand:'QYRIXX',tagline:'Build • Innovate • Grow',
- phone:'9941116919', wa:'919941116919', /* business number: confirm 9941116919 or 9943116919 */
  email:'qyrixx26@gmail.com',city:'Chennai, Tamil Nadu, India',
  firebase:{apiKey:import.meta.env.VITE_FIREBASE_API_KEY,authDomain:import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,projectId:import.meta.env.VITE_FIREBASE_PROJECT_ID,appId:import.meta.env.VITE_FIREBASE_APP_ID},
+ /* Team emails that can open the CRM in the dashboard (also listed in firestore.rules) */
+ admins:(import.meta.env.VITE_ADMIN_EMAILS||'qyrixx2026@gmail.com').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean),
  headlines:['Design with impact. Deliver at scale.','Build smarter. Innovate faster.','Turn your ideas into digital experiences.','Technology that helps your business grow.','Create. Build. Launch. Grow.'],
  sub:'QYRIXX combines thoughtful design, modern development and intelligent automation to turn ideas into digital experiences.',
  social:{Instagram:'',LinkedIn:'',GitHub:''}};
@@ -11,7 +12,6 @@ export const IMG={logo:'/assets/logo.svg',about:'/assets/about.jpg',hero:'/asset
 /* Visible only after login. Fields: name, desc, img (optional), url (optional) */
 export const PROJECTS=[];
 export const PRODUCTS=[];
-export const wa=t=>`https://wa.me/${CFG.wa}?text=${encodeURIComponent(t)}`;
 
 /* ===== New: edit these to change the homepage and dashboard ===== */
 /* Product of the week rotates automatically by calendar week through this list: [category name, service name]
@@ -55,9 +55,9 @@ export const PRODUCT_IMAGES={};
 
 /* Pictures in the two sliding rows under the hero (need at least 8). Do NOT leave this empty. */
 export const GALLERY=['molina','bakery','car','caras','elite','velvetique','kiko','luna','mamonde','springdale','finnegan','everwood'].map(n=>`/assets/img/${n}.jpg`);
-/* Pictures beside the FAQ (one per question, changes as each question opens). Each question has a built-in
-   illustration that matches its topic. To use your own picture for a question, put its path in that position. */
-export const FAQ_IMAGES=[];
+/* Posters beside the FAQ (one per question, same order as the questions; files in public/assets/faq/).
+   Set a position to '' to show the built-in animated illustration for that question instead. */
+export const FAQ_IMAGES=['what-qyrixx-does','how-to-start','what-sets-the-price','what-we-build','project-cost','hosting-setup','your-domain','search-and-seo'].map(n=>`/assets/faq/${n}.jpg`);
 
 /* Reels shown in the dashboard (service names). Each one plays its video from public/assets/reels/<service-name>.mp4
    (cover picture: the .jpg with the same name). Posters use public/assets/posters/<service-name>.jpg.
