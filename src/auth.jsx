@@ -3,7 +3,8 @@ import {initializeApp} from 'firebase/app';
 import {getAuth,onAuthStateChanged,RecaptchaVerifier,signInWithPhoneNumber,GoogleAuthProvider,signInWithPopup,signOut} from 'firebase/auth';
 import {CFG} from './config';
 export const OK=!!CFG.firebase.apiKey;
-const auth=OK?getAuth(initializeApp(CFG.firebase)):null;
+export const app=OK?initializeApp(CFG.firebase):null;
+const auth=app?getAuth(app):null;
 /* Demo preview: only works while Firebase is NOT configured, so you can look at the dashboard before adding keys. */
 const PV='qx-preview';
 export const preview=on=>{try{on?sessionStorage.setItem(PV,'1'):sessionStorage.removeItem(PV)}catch{}};

@@ -5,6 +5,7 @@ import {Home,Services,Category,Service,Login,Contact,Legal,Gallery,NotFound,Pric
 import {PRIVACY,TERMS} from './legal';
 import {PublicLayout,Protected} from './Shell';
 import Dashboard,{Discover} from './Dashboard';
+import Crm from './Crm';
 import {useI18n} from './i18n';
 
 export default function App(){
@@ -28,6 +29,7 @@ export default function App(){
    <Route path="services/:cat/:svc" element={<Service embedded/>}/>
    <Route path="projects" element={<Gallery title={t('dash.projects')} items={PROJECTS} ph={IMG.project} empty={t('dash.projSoon')}/>}/>
    <Route path="products" element={<Gallery title={t('dash.products')} items={PRODUCTS} ph={IMG.product} empty={t('dash.prodSoon')}/>}/>
+   <Route path="crm" element={<Crm/>}/>
   </Route>
  </Routes>;
 }

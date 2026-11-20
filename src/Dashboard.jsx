@@ -1,8 +1,9 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link,NavLink,Outlet,useLocation,useNavigate} from 'react-router-dom';
 import {CATS,find,pshort,hash} from './data';
-import {IMG,wa,DEMO_VIDEOS,REELS,POSTERS} from './config';
+import {IMG,DEMO_VIDEOS,REELS,POSTERS} from './config';
 import {useAuth} from './auth';
+import {isAdmin} from './backend';
 import {useI18n} from './i18n';
 import {Reveal,Circles} from './fx';
 import {MockSite,DemoPlayer,Reel,Poster} from './Media';
@@ -31,8 +32,9 @@ function Side({close}){
   <div className="sd-sep"/>
   <NavLink to="/app/projects" className="sd-i" onClick={close}>{t('dash.projects')}</NavLink>
   <NavLink to="/app/products" className="sd-i" onClick={close}>{t('dash.products')}</NavLink>
+  {isAdmin(user)&&<NavLink to="/app/crm" className="sd-i" onClick={close}>CRM</NavLink>}
   <div className="sd-sep"/>
-  <a className="sd-i" href={wa('Hi QYRIXX, I need help.')} target="_blank" rel="noopener">{t('dash.support')}</a>
+  <Link className="sd-i" to="/contact" state={{type:'support'}} onClick={close}>{t('dash.support')}</Link>
   <Link className="sd-i" to="/" onClick={close}>{t('dash.home')}</Link>
  </nav>;
 }

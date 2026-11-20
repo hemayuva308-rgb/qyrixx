@@ -1,8 +1,9 @@
 /* ===== Edit here ===== */
 export const CFG={brand:'QYRIXX',tagline:'Build • Innovate • Grow',
- phone:'9941116919', wa:'919941116919', /* business number: confirm 9941116919 or 9943116919 */
  email:'qyrixx26@gmail.com',city:'Chennai, Tamil Nadu, India',
  firebase:{apiKey:import.meta.env.VITE_FIREBASE_API_KEY,authDomain:import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,projectId:import.meta.env.VITE_FIREBASE_PROJECT_ID,appId:import.meta.env.VITE_FIREBASE_APP_ID},
+ /* Team emails that can open the CRM in the dashboard (also listed in firestore.rules) */
+ admins:(import.meta.env.VITE_ADMIN_EMAILS||'qyrixx2026@gmail.com').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean),
  headlines:['Design with impact. Deliver at scale.','Build smarter. Innovate faster.','Turn your ideas into digital experiences.','Technology that helps your business grow.','Create. Build. Launch. Grow.'],
  sub:'QYRIXX combines thoughtful design, modern development and intelligent automation to turn ideas into digital experiences.',
  social:{Instagram:'',LinkedIn:'',GitHub:''}};
@@ -11,7 +12,6 @@ export const IMG={logo:'/assets/logo.svg',about:'/assets/about.jpg',hero:'/asset
 /* Visible only after login. Fields: name, desc, img (optional), url (optional) */
 export const PROJECTS=[];
 export const PRODUCTS=[];
-export const wa=t=>`https://wa.me/${CFG.wa}?text=${encodeURIComponent(t)}`;
 
 /* ===== New: edit these to change the homepage and dashboard ===== */
 /* Product of the week rotates automatically by calendar week through this list: [category name, service name]

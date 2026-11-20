@@ -607,3 +607,35 @@ p,li{text-wrap:pretty}
 
 /* homepage services: poster card */
 .sv-img{box-shadow:0 18px 40px rgba(30,42,85,.18)}
+
+/* forms that send to the backend */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ok{color:#1d6b35;font-weight:600}
+.box.sent{border-color:#9fd8b1;background:#f1fbf4}
+
+/* ---------- CRM ---------- */
+.crm h1{margin:0 0 6px;font-size:clamp(28px,3vw,38px)}.crm .lead{font-size:16px;margin:0 0 18px}
+.crm-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.crm-stats button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer;font:inherit;text-align:left}
+.crm-stats button b{font-size:26px;line-height:1.1}.crm-stats button span{font-size:13px;color:var(--mut)}
+.crm-stats button.on{background:#000;color:#fff;border-color:#000}.crm-stats button.on span{color:#d5d9e2}
+.crm-f{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.crm-f input{flex:1 1 240px}
+.crm-f input,.crm-f select,.crm-d select,.crm-d textarea{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font:inherit;font-size:15px;background:#fff}
+.crm-g{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}.crm-g.has-d{grid-template-columns:minmax(0,1fr) minmax(300px,400px)}
+.crm-l{display:flex;flex-direction:column;gap:8px}
+.crm-r{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#fff;cursor:pointer;font:inherit;text-align:left;color:inherit}
+.crm-r:hover{border-color:#b9c0cc}.crm-r.on{border-color:#000;box-shadow:0 0 0 1px #000}
+.crm-r.is-new .crm-n b::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--b);margin-left:8px;vertical-align:middle}
+.crm-n{display:flex;flex-direction:column;min-width:0}.crm-n b,.crm-n small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.crm-n small{color:var(--mut);font-size:13px}
+.crm-s{font-size:13px;font-weight:600}.crm-r time{font-size:12px;color:var(--mut);white-space:nowrap}
+.crm-t{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:#eef1f6;color:#2a2f38;white-space:nowrap}
+.crm-t.t-enquiry{background:#fbe7eb;color:#660016}.crm-t.t-site{background:#dff0fd;color:#0b4a78}.crm-t.t-domain{background:#e6f6ec;color:#1d6b35}.crm-t.t-booking{background:#fff1d6;color:#7a4b00}
+.crm-d{position:sticky;top:84px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 110px);overflow:auto}
+.crm-dh{display:flex;justify-content:space-between;gap:10px}.crm-dh h2{margin:8px 0 2px;font-size:22px}.crm-dh small{color:var(--mut)}
+.crm-x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:22px;cursor:pointer;flex:none}
+.crm-d label{font-size:13px;font-weight:600;margin-top:8px}.crm-d dl{margin:6px 0;display:grid;gap:8px}.crm-d dl div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px;font-size:14px}
+.crm-d dt{color:var(--mut)}.crm-d dd{margin:0;overflow-wrap:anywhere}.crm-d h3{font-size:15px;margin:8px 0 0}
+.crm-msg{white-space:pre-wrap;background:var(--g);border-radius:12px;padding:12px 14px;margin:4px 0;font-size:14px}
+.crm-del{border-color:#c62828;color:#c62828}.crm-del:hover{background:#c62828;border-color:#c62828}
+@media(max-width:900px){.crm-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.crm-g.has-d{grid-template-columns:minmax(0,1fr)}.crm-d{position:static;max-height:none}.crm-r{grid-template-columns:minmax(0,1fr) auto}.crm-r .crm-t,.crm-r time{display:none}}
+
