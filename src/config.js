@@ -47,10 +47,9 @@ export const DEMO_VIDEOS=[
 export const DEMO_POSTERS=[];
 
 /* ===== PICTURES (files are in public/assets/img/) ===== */
-/* Service categories (9, same order as src/data.js). Each category has its own built-in animated illustration
-   in the brand colours, so no two look alike. To use your own picture for a category, put its path in that
-   position, e.g. ['/assets/img/web.jpg','','', ...]. '' = built-in illustration. */
-export const CAT_IMAGES=[];
+/* Service categories (9, same order as src/data.js): the poster shown in the homepage services section.
+   Files are in public/assets/services/. Set a position to '' to show the built-in animated illustration instead. */
+export const CAT_IMAGES=['website-development','ui-ux-and-branding','ai-and-automation','business-solutions','mobile-app-development','digital-marketing','hosting-and-cloud','support-and-maintenance','career-services'].map(n=>`/assets/services/${n}.jpg`);
 /* Product of the week: built-in illustration per product. To use your own picture: {'CRM Solution':'/assets/img/crm.jpg'} */
 export const PRODUCT_IMAGES={};
 
